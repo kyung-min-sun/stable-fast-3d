@@ -27,12 +27,15 @@ Stable Fast 3D is based on [TripoSR](https://github.com/VAST-AI-Research/TripoSR
 ### Installation
 
 Ensure your environment is:
+
 - Python >= 3.8
 - Optional: CUDA or MPS has to be available
 - For Windows **(experimental)**: Visual Studio 2022
 - Has PyTorch installed according to your platform: https://pytorch.org/get-started/locally/ [Make sure the Pytorch CUDA version matches your system's.]
 - Update setuptools by `pip install -U setuptools==69.5.1`
 - Install wheel by `pip install wheel`
+
+- NOTE: you must install `brew install libomp` and find instructions in `brew info libomp`
 
 Then, install the remaining requirements with `pip install -r requirements.txt`.
 For the gradio demo, an additional `pip install -r requirements-demo.txt` is required.
@@ -51,7 +54,7 @@ Stable Fast 3D can also run on Macs via the MPS backend, with the texture baker 
 
 Note that support is **experimental** and not guaranteed to give the same performance and/or quality as the CUDA backend.
 
-You will need to install OpenMP runtime to enable clang support for `-fopenmp`. Follow the tutorial here https://mac.r-project.org/openmp/ 
+You will need to install OpenMP runtime to enable clang support for `-fopenmp`. Follow the tutorial here https://mac.r-project.org/openmp/
 
 MPS backend support was tested on M1 max 64GB with the latest PyTorch nightly release. We recommend you install the latest PyTorch (2.4.0 as of writing) and/or the nightly version to avoid any issues that my arise with older PyTorch versions.
 
@@ -77,6 +80,7 @@ If you have a GPU but are facing issues and want to use the CPU backend instead,
 ```sh
 python run.py demo_files/examples/chair1.png --output-dir output/
 ```
+
 This will save the reconstructed 3D model as a GLB file to `output/`. You can also specify more than one image path separated by spaces. The default options takes about **6GB VRAM** for a single image input.
 
 You may also use `--texture-resolution` to specify the resolution in pixels of the output texture and `--remesh_option` to specify the remeshing operation (None, Triangle, Quad).
@@ -89,36 +93,40 @@ For detailed usage of this script, use `python run.py --help`.
 python gradio_app.py
 ```
 
-
 ## ComfyUI extension
 
 Custom nodes and an [example workflow](./demo_files/workflows/sf3d_example.json) are provided for [ComfyUI](https://github.com/comfyanonymous/ComfyUI).
 
 To install:
 
-* Clone this repo into ```custom_nodes```:
- ```shell
-  $ cd ComfyUI/custom_nodes
-  $ git clone https://github.com/Stability-AI/stable-fast-3d
- ```
-* Install dependencies:
- ```shell
-  $ cd sf3d_code_release
-  $ pip install -r requirements.txt
- ```
-* Restart ComfyUI
+- Clone this repo into `custom_nodes`:
+
+```shell
+ $ cd ComfyUI/custom_nodes
+ $ git clone https://github.com/Stability-AI/stable-fast-3d
+```
+
+- Install dependencies:
+
+```shell
+ $ cd sf3d_code_release
+ $ pip install -r requirements.txt
+```
+
+- Restart ComfyUI
 
 ## Remesher Options:
 
-  -`none`: mesh unchanged after generation. No CPU overhead.
+-`none`: mesh unchanged after generation. No CPU overhead.
 
-  -`triangle`: verticies and edges are rearranged to form a triangle topography. Implementation is from: *"[A Remeshing Approach to Multiresolution Modeling](https://github.com/sgsellan/botsch-kobbelt-remesher-libigl)" by M. Botsch and L. Kobbelt*. CPU overhead expected.
+-`triangle`: verticies and edges are rearranged to form a triangle topography. Implementation is from: _"[A Remeshing Approach to Multiresolution Modeling](https://github.com/sgsellan/botsch-kobbelt-remesher-libigl)" by M. Botsch and L. Kobbelt_. CPU overhead expected.
 
-  -`quad`: verticies and edges are rearanged in quadrilateral topography with a proper quad flow. The quad mesh is split into triangles for export with GLB. Implementation is from *"[Instant Field-Aligned Meshes](https://github.com/wjakob/instant-meshes)" from Jakob et al.*. CPU overhead expected.
+-`quad`: verticies and edges are rearanged in quadrilateral topography with a proper quad flow. The quad mesh is split into triangles for export with GLB. Implementation is from _"[Instant Field-Aligned Meshes](https://github.com/wjakob/instant-meshes)" from Jakob et al._. CPU overhead expected.
 
 Additionally the target vertex count can be specified. This is not a hard constraint but a rough vertex count the method aims to create. This target is ignored if the remesher is set to `none`.
 
 ## Citation
+
 ```BibTeX
 @article{sf3d2024,
   title={SF3D: Stable Fast 3D Mesh Reconstruction with UV-unwrapping and Illumination Disentanglement},
